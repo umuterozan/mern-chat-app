@@ -5,12 +5,14 @@ const User = require("../models/User");
 const auth = require("../auth");
 
 router.post("/register", async (req, res) => {
-    console.log(req.body);
     try {
         const user = await User.create(req.body);
         res.status(201).json({
             ok: true,
-            user,
+            user: {
+                _id: user._id,
+                name: user.name,
+            },
         });
     } catch (err) {
         res.status(500).json({
@@ -39,7 +41,10 @@ router.post("/login", async (req, res) => {
         if (same) {
             res.status(200).json({
                 ok: true,
-                user,
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                },
                 token: auth.createToken(user._id),
             });
         } else {
