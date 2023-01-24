@@ -7,7 +7,13 @@ export default function Login({ switchForm }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        loginUser(formData).then((res) => console.log(res))
+        loginUser(formData).then((res) => {
+            if (res.ok) {
+                localStorage.setItem("_token", res.token)
+                localStorage.setItem("_user", JSON.stringify(res.user))
+                switchForm("chat")
+            }
+        })
     }
 
     const handleChange = (e) => {

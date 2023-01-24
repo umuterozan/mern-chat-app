@@ -6,7 +6,11 @@ export default function Register({ switchForm }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        registerUser(formData);
+        registerUser(formData).then((res) => {
+            if (res.ok) {
+                switchForm("login")
+            }
+        });
     };
 
     const handleChange = (e) => {
