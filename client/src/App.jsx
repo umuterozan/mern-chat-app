@@ -13,7 +13,7 @@ export default function App() {
     const checkAuth = () => {
         if (localStorage.getItem("_token")) {
             return (
-                <Chat />
+                <Chat switchForm={switchForm} />
             )
         } else {
             switch (currentForm) {
