@@ -22,7 +22,7 @@ export default function Login({ switchForm }) {
     }
 
     return (
-        <div className="w-[500px] mx-auto mt-20 border-2 p-20 rounded">
+        <div className="max-w-[500px] mx-auto mt-20 border-2 p-20 rounded">
             <div className="mb-10">
                 <h1 className="text-center text-3xl">Login Page</h1>
             </div>

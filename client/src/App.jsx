@@ -1,6 +1,6 @@
 import Login from "./components/forms/Login";
 import Register from "./components/forms/Register";
-import Chat from "./components/forms/Chat";
+import Inbox from "./components/Inbox";
 import { useState } from "react";
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
     const checkAuth = () => {
         if (localStorage.getItem("_token")) {
             return (
-                <Chat switchForm={switchForm} />
+                <Inbox switchForm={switchForm} />
             )
         } else {
             switch (currentForm) {
