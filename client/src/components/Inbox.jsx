@@ -21,7 +21,7 @@ export default function Inbox({ switchForm }) {
                         <button><SlNote size={20} /></button>
                     </div>
                     <div className="h-[644px]">
-                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 mt-2 py-3 px-5">
+                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
                             <div>
                                 <GoPerson size={32} />
                             </div>
@@ -30,7 +30,7 @@ export default function Inbox({ switchForm }) {
                                 <div className="opacity-60 text-xs">Bugün aktif</div>
                             </div>
                         </div>                        
-                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 mt-2 py-3 px-5">
+                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
                             <div>
                                 <GoPerson size={32} />
                             </div>
@@ -42,8 +42,8 @@ export default function Inbox({ switchForm }) {
                     </div>
                 </div>
                 {/* inbox welcome page! */}
-                {/* <Welcome /> */}
-                <Chat />
+                <Welcome />
+                {/* <Chat /> */}
             </div>
         </div>
     )

@@ -1,1 +1,1 @@
-export { registerUser, loginUser } from "./post"
+export { registerUser, loginUser, getUsers } from "./user"

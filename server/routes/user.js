@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const auth = require("../auth");
+const paginatedResults = require("../helpers/paginatedResults");
 
 router.post("/register", async (req, res) => {
     try {
@@ -59,6 +60,10 @@ router.post("/login", async (req, res) => {
             err,
         });
     }
+});
+
+router.get("/users", paginatedResults(User), async (req, res) => {
+    res.json(res.paginatedResults);
 });
 
 module.exports = router;
