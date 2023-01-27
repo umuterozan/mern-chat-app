@@ -3,8 +3,9 @@ import { GrClose } from "react-icons/gr";
 import { GoPerson } from "react-icons/go";
 import { TfiArrowCircleRight } from "react-icons/tfi";
 import Modal from "react-modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getUsers } from "../services";
+import { useEffect } from "react";
 
 const customStyles = {
     content: {
@@ -23,13 +24,22 @@ Modal.setAppElement("#root");
 export default function Welcome() {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [ButtonIsDisabled, setButtonDisabled] = useState(false);
+
+    useEffect(() => {
+        getUsers(currentPage, currentPage === 1 ? 6 : 5).then((res) => {
+            setUsers(res.result);
+            setButtonDisabled(!res.previous);
+        });
+    }, [currentPage]);
 
     const openModal = () => {
         setIsOpen(true);
     };
 
     const afterOpenModal = () => {
-        getUsers(1, 10).then((res) => setUsers(res.result));
+        setCurrentPage(1);
     };
 
     const closeModal = () => {
@@ -65,26 +75,40 @@ export default function Welcome() {
                             <GrClose size={20} />
                         </button>
                         <h2 className="font-medium">Yeni Mesaj</h2>
-                        <button className="text-blue-500">İleri</button>
+                        <button
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={!ButtonIsDisabled}
+                            className="text-blue-500"
+                        >
+                            İleri
+                        </button>
                     </div>
                     <div className="userList">
                         {users &&
-                            users.map((user, key) => (
-                                <div
-                                    className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-100"
-                                    key={key}
-                                >
-                                    <div className="flex items-center gap-x-5">
-                                        <div>
-                                            <GoPerson />
+                            users
+                                .filter(
+                                    (user) =>
+                                        user._id !==
+                                        JSON.parse(
+                                            localStorage.getItem("_user")
+                                        )._id
+                                )
+                                .map((user, key) => (
+                                    <div
+                                        className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-100"
+                                        key={key}
+                                    >
+                                        <div className="flex items-center gap-x-5">
+                                            <div>
+                                                <GoPerson />
+                                            </div>
+                                            <div>{user.name}</div>
                                         </div>
-                                        <div>{user.name}</div>
+                                        <div>
+                                            <TfiArrowCircleRight size={20} />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <TfiArrowCircleRight size={20} />
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
                     </div>
                 </div>
             </Modal>

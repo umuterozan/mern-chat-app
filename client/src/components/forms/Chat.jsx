@@ -3,7 +3,7 @@ import { GoPerson } from "react-icons/go";
 export default function Chat() {
     return (
         <div className="w-full h-full flex flex-col">
-            <div className="border-b-2 h-14 flex justify-around items-center">
+            <div className="px-5 border-b-2 h-14 flex justify-between items-center">
                 <div className="flex items-center gap-x-5">
                     <div className="avatar">
                         <GoPerson size={20} />

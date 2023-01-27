@@ -1,5 +1,5 @@
 import { GoPerson } from "react-icons/go"
-import { SlNote, SlLogout } from "react-icons/sl"
+import { SlLogout, SlHome } from "react-icons/sl"
 import Welcome from "./Welcome"
 import Chat from "./forms/Chat"
 
@@ -18,7 +18,7 @@ export default function Inbox({ switchForm }) {
                     <div className="border-b-2 h-14 flex justify-around items-center">
                         <button onClick={handleLogout}><SlLogout size={20} /></button>
                         <div className="font-medium">umuterozan</div>
-                        <button><SlNote size={20} /></button>
+                        <button><SlHome size={20} /></button>
                     </div>
                     <div className="h-[644px]">
                         <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
