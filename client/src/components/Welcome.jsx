@@ -21,14 +21,14 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-export default function Welcome() {
+export default function Welcome({ setChatBox }) {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [ButtonIsDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
-        getUsers(currentPage, currentPage === 1 ? 6 : 5).then((res) => {
+        getUsers(currentPage, 6).then((res) => {
             setUsers(res.result);
             setButtonDisabled(!res.previous);
         });
@@ -95,6 +95,7 @@ export default function Welcome() {
                                 )
                                 .map((user, key) => (
                                     <div
+                                        onClick={() => setChatBox({ _id: user._id, name: user.name })}
                                         className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-100"
                                         key={key}
                                     >

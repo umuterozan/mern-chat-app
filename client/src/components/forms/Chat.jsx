@@ -1,6 +1,6 @@
 import { GoPerson } from "react-icons/go";
 
-export default function Chat() {
+export default function Chat({ currentChatBox }) {
     return (
         <div className="w-full h-full flex flex-col">
             <div className="px-5 border-b-2 h-14 flex justify-between items-center">
@@ -8,7 +8,7 @@ export default function Chat() {
                     <div className="avatar">
                         <GoPerson size={20} />
                     </div>
-                    <div className="name">admin123</div>
+                    <div className="name">{currentChatBox.name}</div>
                 </div>
                 <div className="opacity-60 text-xs">Şu an aktif</div>
             </div>
