@@ -3,14 +3,22 @@ import { SlLogout, SlHome } from "react-icons/sl";
 import Welcome from "./Welcome";
 import Chat from "./forms/Chat";
 import { useState } from "react";
+import { getChats } from "../services";
+import { useEffect } from "react";
 
 export default function Inbox({ switchForm }) {
     const [currentChatBox, setChatBox] = useState(false);
+    const [chats, setChats] = useState(false)
+
+    useEffect(() => {
+        getChats(JSON.parse(localStorage.getItem("_user"))._id).then((res) => setChats(res?.chat))
+    }, [])
 
     const handleLogout = () => {
         localStorage.removeItem("_token");
         localStorage.removeItem("_user");
         switchForm("login");
+        window.location.reload()
     };
 
     return (
@@ -27,28 +35,19 @@ export default function Inbox({ switchForm }) {
                         </button>
                     </div>
                     <div className="h-[644px]">
-                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
-                            <div>
-                                <GoPerson size={32} />
-                            </div>
-                            <div>
-                                <div className="name">admin123</div>
-                                <div className="opacity-60 text-xs">
-                                    Bugün aktif
+                        {chats && chats.map((chat, key) => (
+                            <div key={key} className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
+                                <div>
+                                    <GoPerson size={32} />
+                                </div>
+                                <div>
+                                    <div className="name">{chat.members.filter((member) => member._id !== JSON.parse(localStorage.getItem("_user"))._id).map((member) => (member.name + " "))}</div>
+                                    <div className="opacity-60 text-xs">
+                                        Bugün aktif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="hover:bg-gray-100 cursor-pointer flex items-center gap-x-5 py-3 px-5">
-                            <div>
-                                <GoPerson size={32} />
-                            </div>
-                            <div>
-                                <div className="name">admin321</div>
-                                <div className="opacity-60 text-xs">
-                                    Bugün aktif
-                                </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
                 {/* inbox home or chatbox area */}

@@ -5,6 +5,10 @@ const User = require("../models/User");
 const auth = require("../auth");
 const paginatedResults = require("../helpers/paginatedResults");
 
+router.get("/", auth.authenticateToken, paginatedResults(User), async (req, res) => {
+    res.json(res.paginatedResults);
+});
+
 router.post("/register", async (req, res) => {
     try {
         const user = await User.create(req.body);
@@ -62,8 +66,5 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.get("/users", paginatedResults(User), async (req, res) => {
-    res.json(res.paginatedResults);
-});
 
 module.exports = router;

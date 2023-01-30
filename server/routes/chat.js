@@ -4,7 +4,7 @@ const Chat = require("../models/Chat");
 const auth = require("../auth");
 
 router.post("/", auth.authenticateToken, async (req, res) => {
-    if (req.user._id.toString() !== req.body.senderId) {
+    if (req.user._id.toString() !== req.body.sender._id) {
         return res.status(401).json({
             ok: false,
             err: "Not authorized",
@@ -13,7 +13,7 @@ router.post("/", auth.authenticateToken, async (req, res) => {
 
     try {
         const chat = await Chat.create({
-            members: [req.body.senderId, req.body.receiverId],
+            members: [req.body.sender, req.body.receiver],
         });
         res.status(201).json({
             ok: true,
@@ -30,7 +30,7 @@ router.post("/", auth.authenticateToken, async (req, res) => {
 router.get("/:userId", auth.authenticateToken, async (req, res) => {
     try {
         const chat = await Chat.find({
-            members: { $in: [req.params.userId] },
+            "members._id": { $in: [req.params.userId] },
         });
 
         res.status(200).json({
