@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Chat = require("../models/Chat");
+const Conversation = require("../models/Conversation");
 const auth = require("../auth");
 
 router.post("/", auth.authenticateToken, async (req, res) => {
@@ -12,12 +12,12 @@ router.post("/", auth.authenticateToken, async (req, res) => {
     }
 
     try {
-        const chat = await Chat.create({
+        const conversation = await Conversation.create({
             members: [req.body.sender, req.body.receiver],
         });
         res.status(201).json({
             ok: true,
-            chat,
+            conversation,
         });
     } catch (err) {
         res.status(500).json({
@@ -29,13 +29,13 @@ router.post("/", auth.authenticateToken, async (req, res) => {
 
 router.get("/:userId", auth.authenticateToken, async (req, res) => {
     try {
-        const chat = await Chat.find({
+        const conversation = await Conversation.find({
             "members._id": { $in: [req.params.userId] },
         });
 
         res.status(200).json({
             ok: true,
-            chat,
+            conversation,
         });
     } catch (err) {
         res.status(500).json({
