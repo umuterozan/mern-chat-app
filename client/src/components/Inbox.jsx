@@ -29,7 +29,7 @@ export default function Inbox({ switchForm }) {
                         <button onClick={handleLogout}>
                             <SlLogout size={20} />
                         </button>
-                        <div className="font-medium">umuterozan</div>
+                        <div className="font-medium">{JSON.parse(localStorage.getItem("_user")).name}</div>
                         <button onClick={() => setCurrentChat(false)}>
                             <SlHome size={20} />
                         </button>

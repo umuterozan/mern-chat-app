@@ -1,2 +1,2 @@
 export { registerUser, loginUser, getUsers } from "./user"
-export { getConversations, getMessages } from "./chat"
+export { getConversations, getMessages, sendMessage } from "./chat"
