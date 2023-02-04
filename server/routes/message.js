@@ -18,10 +18,10 @@ router.post("/", auth.authenticateToken, async (req, res) => {
     }
 });
 
-router.get("/:chatId", auth.authenticateToken, async (req, res) => {
+router.get("/:conversationId", auth.authenticateToken, async (req, res) => {
     try {
         const messages = await Message.find({
-            chatId: req.params.chatId
+            conversationId: req.params.conversationId
         })
         res.status(200).json({
             ok: true,

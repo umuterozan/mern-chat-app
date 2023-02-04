@@ -30,13 +30,15 @@ export default function Inbox({ switchForm }) {
                             <SlLogout size={20} />
                         </button>
                         <div className="font-medium">umuterozan</div>
-                        <button onClick={() => setChatBox(false)}>
+                        <button onClick={() => setCurrentChat(false)}>
                             <SlHome size={20} />
                         </button>
                     </div>
                     <div className="h-[644px]">
                         {conversations && conversations.map((c, key) => (
-                            <Conversation key={key} conversation={c} />
+                            <div key={key} onClick={() => setCurrentChat(c)}>
+                                <Conversation conversation={c} />
+                            </div>
                         ))}
                     </div>
                 </div>
