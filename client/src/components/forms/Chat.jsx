@@ -2,11 +2,37 @@ import { useEffect, useRef, useState } from "react";
 import { GoPerson } from "react-icons/go";
 import { getMessages, sendMessage } from "../../services";
 import Message from "../Message";
+import { io } from "socket.io-client"
 
 export default function Chat({ currentChat }) {
     const [messages, setMessages] = useState(false)
     const [newMessage, setNewMessage] = useState("")
     const scrollRef = useRef()
+    const socket = useRef(io("http://localhost:5000"))
+    const [arrivalMessage, setArrivalMessage] = useState(null)
+
+    useEffect(() => {
+        socket.current = io("http://localhost:5000")
+
+        socket.current.on("getMessage", data => {
+            setArrivalMessage({
+                senderId: data.senderId,
+                content: data.content
+            })
+        })
+    }, [])
+
+    useEffect(() => {
+        arrivalMessage && currentChat?.members.some(member => member._id === arrivalMessage.senderId) &&
+        setMessages(prev => [...prev, arrivalMessage])
+    }, [arrivalMessage, currentChat])
+
+    useEffect(() => {
+        socket.current.emit("addUser", JSON.parse(localStorage.getItem("_user"))._id)
+        socket.current.on("getUsers", users => {
+            console.log(users)
+        })
+    }, [])
 
     useEffect(() => {
         getMessages(currentChat._id).then((res) => setMessages(res.messages))
@@ -19,6 +45,14 @@ export default function Chat({ currentChat }) {
             senderId: JSON.parse(localStorage.getItem("_user"))._id,
             content: newMessage
         }
+
+        const receiverId = currentChat.members.find(member => member._id !== JSON.parse(localStorage.getItem("_user"))._id)._id
+
+        socket.current.emit("sendMessage", {
+            senderId: JSON.parse(localStorage.getItem("_user"))._id,
+            receiverId,
+            content: newMessage
+        })
         
         sendMessage(formData).then((res) => {
             setMessages([...messages, res.message])
@@ -41,7 +75,7 @@ export default function Chat({ currentChat }) {
                 </div>
                 <div className="opacity-60 text-xs">Şu an aktif</div>
             </div>
-            <div className="h-[556px] flex flex-col px-5 overflow-y-scroll">
+            <div className="h-[556px] flex flex-col px-5 overflow-y-auto">
                 {messages && messages.map((m, key) => (
                     <div key={key} ref={scrollRef}>
                         <Message message={m} own={m.senderId === JSON.parse(localStorage.getItem("_user"))._id} />

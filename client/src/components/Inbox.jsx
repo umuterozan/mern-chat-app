@@ -1,14 +1,14 @@
 import { SlLogout, SlHome } from "react-icons/sl";
 import Welcome from "./Welcome";
 import Chat from "./forms/Chat";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { getConversations } from "../services";
 import { useEffect } from "react";
 import Conversation from "./Conversation";
 
 export default function Inbox({ switchForm }) {
     const [conversations, setConversations] = useState(false)
-    const [currentChat, setCurrentChat] = useState(false);
+    const [currentChat, setCurrentChat] = useState(false);    
 
     useEffect(() => {
         getConversations(JSON.parse(localStorage.getItem("_user"))._id).then((res) => setConversations(res?.conversation))
@@ -34,7 +34,7 @@ export default function Inbox({ switchForm }) {
                             <SlHome size={20} />
                         </button>
                     </div>
-                    <div className="h-[644px]">
+                    <div className="h-[644px] overflow-y-auto">
                         {conversations && conversations.map((c, key) => (
                             <div key={key} onClick={() => setCurrentChat(c)}>
                                 <Conversation conversation={c} />
