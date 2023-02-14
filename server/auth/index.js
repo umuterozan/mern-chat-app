@@ -3,10 +3,10 @@ const User = require("../models/User");
 
 function createToken(userId) {
     const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "10s",
+        expiresIn: "20s",
     });
     const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "48h",
+        expiresIn: "40s"
     })
 
     return {
@@ -34,31 +34,46 @@ async function authenticateToken(req, res, next) {
     } catch (err) {
         res.status(401).json({
             ok: false,
-            err: err.name === "TokenExpiredError" ? "Token expired" : "Not authorized"
+            err: err.name === "TokenExpiredError" ? "jwt expired" : "Not authorized"
         })
     }
 }
 
 function refreshToken (req, res, next) {
-    const refreshToken = req.body.refreshToken
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decode) => {
-        if (err) {
-            res.status(401).json({
-                ok: false,
-                err: err.message,
-            })
-        } else {
-            const accessToken = jwt.sign({ userId: decode.userId }, process.env.ACCESS_TOKEN_SECRET, {
+    try {
+        const refreshToken = req.body.refreshToken
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({
+                    ok: false,
+                    err: err.message,
+                })
+            }
+    
+            const userId = decoded.userId
+    
+            const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: "20s"
             })
-            const refreshToken = req.body.refreshToken
+    
+            const newRefreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
+                expiresIn: "40s"
+            })
+    
             res.status(200).json({
                 ok: true,
                 accessToken,
-                refreshToken,
+                refreshToken: newRefreshToken,
             })
-        }
-    })
+        })
+
+        next()
+    } catch (err) {
+        res.status(403).json({
+            ok: false,
+            err: err.message,
+        })
+    }
 }
 
 module.exports = {
