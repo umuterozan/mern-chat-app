@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { loginUser } from "../../services";
+import { loginUser } from "../services";
 
 export default function Login({ switchForm }) {
-
-    const [formData, setFormData] = useState({})
+    const [formData, setFormData] = useState({});
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         loginUser(formData).then((res) => {
             if (res.ok) {
-                localStorage.setItem("_token", res.token)
-                localStorage.setItem("_user", JSON.stringify(res.user))
-                switchForm("chat")
+                localStorage.setItem("_token", res.accessToken);
+                localStorage.setItem("_user", JSON.stringify(res.user));
+                switchForm("chat");
             }
-        })
-    }
+        });
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({ ...prevState, [name]: value }));
-    }
+    };
 
     return (
         <div className="max-w-[500px] mx-auto mt-20 border-2 p-20 rounded">

@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
     } catch (err) {
         res.status(500).json({
             ok: false,
-            err,
+            err: err.message,
         });
     }
 });
@@ -44,13 +44,15 @@ router.post("/login", async (req, res) => {
         }
 
         if (same) {
+            const { accessToken, refreshToken } = auth.createToken(user._id)
             res.status(200).json({
                 ok: true,
                 user: {
                     _id: user._id,
                     name: user.name,
                 },
-                token: auth.createToken(user._id),
+                accessToken,
+                refreshToken,
             });
         } else {
             res.status(401).json({
@@ -61,10 +63,11 @@ router.post("/login", async (req, res) => {
     } catch (err) {
         res.status(500).json({
             ok: false,
-            err,
+            err: err.message,
         });
     }
 });
 
+router.post("/refresh", auth.refreshToken)
 
 module.exports = router;

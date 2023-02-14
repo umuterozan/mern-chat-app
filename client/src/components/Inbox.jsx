@@ -1,24 +1,29 @@
+import { useContext } from "react";
+import { Context } from "../context/UserContext";
 import { SlLogout, SlHome } from "react-icons/sl";
 import Welcome from "./Welcome";
-import Chat from "./forms/Chat";
-import { useState, useRef } from "react";
+import Chat from "./Chat";
+import { useState } from "react";
 import { getConversations } from "../services";
 import { useEffect } from "react";
 import Conversation from "./Conversation";
 
 export default function Inbox({ switchForm }) {
-    const [conversations, setConversations] = useState(false)
-    const [currentChat, setCurrentChat] = useState(false);    
+    const { _user } = useContext(Context);
+    const [conversations, setConversations] = useState(false);
+    const [currentChat, setCurrentChat] = useState(false);
 
     useEffect(() => {
-        getConversations(JSON.parse(localStorage.getItem("_user"))._id).then((res) => setConversations(res?.conversation))
-    }, [])
+        getConversations(_user._id).then((res) =>
+            setConversations(res?.conversation)
+        );
+    }, [_user._id]);
 
     const handleLogout = () => {
         localStorage.removeItem("_token");
         localStorage.removeItem("_user");
         switchForm("login");
-        window.location.reload()
+        window.location.reload();
     };
 
     return (
@@ -29,17 +34,21 @@ export default function Inbox({ switchForm }) {
                         <button onClick={handleLogout}>
                             <SlLogout size={20} />
                         </button>
-                        <div className="font-medium">{JSON.parse(localStorage.getItem("_user")).name}</div>
+                        <div className="font-medium">{_user.name}</div>
                         <button onClick={() => setCurrentChat(false)}>
                             <SlHome size={20} />
                         </button>
                     </div>
                     <div className="h-[644px] overflow-y-auto">
-                        {conversations && conversations.map((c, key) => (
-                            <div key={key} onClick={() => setCurrentChat(c)}>
-                                <Conversation conversation={c} />
-                            </div>
-                        ))}
+                        {conversations &&
+                            conversations.map((c, key) => (
+                                <div
+                                    key={key}
+                                    onClick={() => setCurrentChat(c)}
+                                >
+                                    <Conversation conversation={c} />
+                                </div>
+                            ))}
                     </div>
                 </div>
                 {/* inbox home or chatbox area */}

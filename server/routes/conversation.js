@@ -22,7 +22,7 @@ router.post("/", auth.authenticateToken, async (req, res) => {
     } catch (err) {
         res.status(500).json({
             ok: false,
-            err,
+            err: err.message,
         });
     }
 });
@@ -40,7 +40,7 @@ router.get("/:userId", auth.authenticateToken, async (req, res) => {
     } catch (err) {
         res.status(500).json({
             ok: false,
-            err,
+            err: err.message,
         });
     }
 });

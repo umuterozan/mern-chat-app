@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../../services";
+import { registerUser } from "../services";
 
 export default function Register({ switchForm }) {
     const [formData, setFormData] = useState({});
@@ -8,7 +8,7 @@ export default function Register({ switchForm }) {
         e.preventDefault();
         registerUser(formData).then((res) => {
             if (res.ok) {
-                switchForm("login")
+                switchForm("login");
             }
         });
     };

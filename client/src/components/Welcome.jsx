@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { Context } from "../context/UserContext";
 import { FaRegPaperPlane } from "react-icons/fa";
 import { GrClose } from "react-icons/gr";
 import { GoPerson } from "react-icons/go";
@@ -22,6 +24,7 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export default function Welcome({ setCurrentChat }) {
+    const { _user } = useContext(Context);
     const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -86,16 +89,15 @@ export default function Welcome({ setCurrentChat }) {
                     <div className="userList">
                         {users &&
                             users
-                                .filter(
-                                    (user) =>
-                                        user._id !==
-                                        JSON.parse(
-                                            localStorage.getItem("_user")
-                                        )._id
-                                )
+                                .filter((user) => user._id !== _user._id)
                                 .map((user, key) => (
                                     <div
-                                        onClick={() => setCurrentChat({ _id: user._id, name: user.name })}
+                                        onClick={() =>
+                                            setCurrentChat({
+                                                _id: user._id,
+                                                name: user.name,
+                                            })
+                                        }
                                         className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-100"
                                         key={key}
                                     >
