@@ -4,27 +4,31 @@ import { SlLogout, SlHome } from "react-icons/sl";
 import Welcome from "./Welcome";
 import Chat from "./Chat";
 import { useState } from "react";
-import { getConversations } from "../services";
+import { getConversations, refreshUser } from "../services";
 import { useEffect } from "react";
 import Conversation from "./Conversation";
+import { handleRefresh, handleLogout } from "../helpers";
 
-export default function Inbox({ switchForm }) {
-    const { _user } = useContext(Context);
+export default function Inbox() {
+    const { _user, _refreshToken } = useContext(Context);
     const [conversations, setConversations] = useState(false);
     const [currentChat, setCurrentChat] = useState(false);
 
     useEffect(() => {
-        getConversations(_user._id).then((res) =>
-            setConversations(res?.conversation)
-        );
-    }, [_user._id]);
-
-    const handleLogout = () => {
-        localStorage.removeItem("_token");
-        localStorage.removeItem("_user");
-        switchForm("login");
-        window.location.reload();
-    };
+        getConversations(_user._id)
+            .then((res) => setConversations(res?.conversation))
+            .catch((err) => {
+                if (err.err === "jwt expired") {
+                    refreshUser({
+                        refreshToken: _refreshToken,
+                    })
+                        .then((res) => {
+                            handleRefresh(res);
+                        })
+                        .catch((err) => handleLogout());
+                }
+            });
+    }, [_refreshToken, _user._id]);
 
     return (
         <div className="py-5">

@@ -21,18 +21,18 @@ router.post("/", auth.authenticateToken, async (req, res) => {
 router.get("/:conversationId", auth.authenticateToken, async (req, res) => {
     try {
         const messages = await Message.find({
-            conversationId: req.params.conversationId
-        })
+            conversationId: req.params.conversationId,
+        });
         res.status(200).json({
             ok: true,
-            messages
-        })
+            messages,
+        });
     } catch (err) {
         res.status(500).json({
             ok: false,
             err: err.message,
-        })
+        });
     }
-})
+});
 
 module.exports = router;

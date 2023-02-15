@@ -6,8 +6,9 @@ import { GoPerson } from "react-icons/go";
 import { TfiArrowCircleRight } from "react-icons/tfi";
 import Modal from "react-modal";
 import { useState } from "react";
-import { getUsers } from "../services";
+import { getUsers, refreshUser } from "../services";
 import { useEffect } from "react";
+import { handleRefresh, handleLogout } from "../helpers";
 
 const customStyles = {
     content: {
@@ -24,18 +25,30 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export default function Welcome({ setCurrentChat }) {
-    const { _user } = useContext(Context);
+    const { _user, _refreshToken } = useContext(Context);
     const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [ButtonIsDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
-        getUsers(currentPage, 6).then((res) => {
-            setUsers(res.result);
-            setButtonDisabled(!res.previous);
-        });
-    }, [currentPage]);
+        getUsers(currentPage, 6)
+            .then((res) => {
+                setUsers(res.result);
+                setButtonDisabled(!res.previous);
+            })
+            .catch((err) => {
+                if (err.err === "jwt expired") {
+                    refreshUser({
+                        refreshToken: _refreshToken,
+                    })
+                        .then((res) => {
+                            handleRefresh(res);
+                        })
+                        .catch((err) => handleLogout());
+                }
+            });
+    }, [currentPage, _refreshToken]);
 
     const openModal = () => {
         setIsOpen(true);

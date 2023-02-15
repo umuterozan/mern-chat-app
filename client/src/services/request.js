@@ -3,7 +3,7 @@ function request(endpoint, data = false, method = "GET") {
         const options = {
             method,
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("_token"),
+                Authorization: "Bearer " + localStorage.getItem("_accessToken"),
                 "Content-Type": "application/json",
             },
         };

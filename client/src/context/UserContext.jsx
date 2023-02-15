@@ -4,7 +4,8 @@ export const Context = createContext();
 
 const Provider = ({ children }) => {
     const userData = {
-        _token: localStorage.getItem("_token"),
+        _accessToken: localStorage.getItem("_accessToken"),
+        _refreshToken: localStorage.getItem("_refreshToken"),
         _user: JSON.parse(localStorage.getItem("_user")),
     };
 

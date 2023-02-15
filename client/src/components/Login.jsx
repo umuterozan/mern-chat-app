@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { handleLogin } from "../helpers/handleLogin";
 import { loginUser } from "../services";
 
 export default function Login({ switchForm }) {
@@ -8,8 +9,7 @@ export default function Login({ switchForm }) {
         e.preventDefault();
         loginUser(formData).then((res) => {
             if (res.ok) {
-                localStorage.setItem("_token", res.accessToken);
-                localStorage.setItem("_user", JSON.stringify(res.user));
+                handleLogin(res);
                 switchForm("chat");
             }
         });

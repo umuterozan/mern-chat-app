@@ -12,8 +12,8 @@ export default function App() {
     };
 
     const checkAuth = () => {
-        if (localStorage.getItem("_token")) {
-            return <Inbox switchForm={switchForm} />;
+        if (localStorage.getItem("_accessToken")) {
+            return <Inbox />;
         } else {
             switch (currentForm) {
                 case "login":

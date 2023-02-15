@@ -5,9 +5,14 @@ const User = require("../models/User");
 const auth = require("../auth");
 const paginatedResults = require("../helpers/paginatedResults");
 
-router.get("/", auth.authenticateToken, paginatedResults(User), async (req, res) => {
-    res.json(res.paginatedResults);
-});
+router.get(
+    "/",
+    auth.authenticateToken,
+    paginatedResults(User),
+    async (req, res) => {
+        res.json(res.paginatedResults);
+    }
+);
 
 router.post("/register", async (req, res) => {
     try {
@@ -44,7 +49,7 @@ router.post("/login", async (req, res) => {
         }
 
         if (same) {
-            const { accessToken, refreshToken } = auth.createToken(user._id)
+            const { accessToken, refreshToken } = auth.createToken(user._id);
             res.status(200).json({
                 ok: true,
                 user: {
@@ -68,6 +73,6 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/refresh", auth.refreshToken)
+router.post("/refresh", auth.refreshToken);
 
 module.exports = router;
