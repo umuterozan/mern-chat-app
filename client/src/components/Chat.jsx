@@ -2,10 +2,9 @@ import { useContext } from "react";
 import { Context } from "../context/UserContext";
 import { useEffect, useRef, useState } from "react";
 import { GoPerson } from "react-icons/go";
-import { getMessages, refreshUser, sendMessage } from "../services";
+import { getMessages, sendMessage } from "../services";
 import Message from "./Message";
 import { io } from "socket.io-client";
-import { handleRefresh, handleLogout } from "../helpers";
 
 export default function Chat({ currentChat }) {
     const { _user, _refreshToken } = useContext(Context);
@@ -42,19 +41,7 @@ export default function Chat({ currentChat }) {
     }, [_user._id]);
 
     useEffect(() => {
-        getMessages(currentChat._id)
-            .then((res) => setMessages(res.messages))
-            .catch((err) => {
-                if (err.err === "jwt expired") {
-                    refreshUser({
-                        refreshToken: _refreshToken,
-                    })
-                        .then((res) => {
-                            handleRefresh(res);
-                        })
-                        .catch((err) => handleLogout());
-                }
-            });
+        getMessages(currentChat._id).then((res) => setMessages(res.messages));
     }, [currentChat, _refreshToken]);
 
     const handleSubmit = (e) => {
@@ -75,22 +62,10 @@ export default function Chat({ currentChat }) {
             content: newMessage,
         });
 
-        sendMessage(formData)
-            .then((res) => {
-                setMessages([...messages, res.message]);
-                setNewMessage("");
-            })
-            .catch((err) => {
-                if (err.err === "jwt expired") {
-                    refreshUser({
-                        refreshToken: _refreshToken,
-                    })
-                        .then((res) => {
-                            handleRefresh(res);
-                        })
-                        .catch((err) => handleLogout());
-                }
-            });
+        sendMessage(formData).then((res) => {
+            setMessages([...messages, res.message]);
+            setNewMessage("");
+        });
     };
 
     useEffect(() => {

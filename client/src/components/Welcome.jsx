@@ -6,9 +6,8 @@ import { GoPerson } from "react-icons/go";
 import { TfiArrowCircleRight } from "react-icons/tfi";
 import Modal from "react-modal";
 import { useState } from "react";
-import { getUsers, refreshUser } from "../services";
+import { getUsers } from "../services";
 import { useEffect } from "react";
-import { handleRefresh, handleLogout } from "../helpers";
 
 const customStyles = {
     content: {
@@ -32,22 +31,10 @@ export default function Welcome({ setCurrentChat }) {
     const [ButtonIsDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
-        getUsers(currentPage, 6)
-            .then((res) => {
-                setUsers(res.result);
-                setButtonDisabled(!res.previous);
-            })
-            .catch((err) => {
-                if (err.err === "jwt expired") {
-                    refreshUser({
-                        refreshToken: _refreshToken,
-                    })
-                        .then((res) => {
-                            handleRefresh(res);
-                        })
-                        .catch((err) => handleLogout());
-                }
-            });
+        getUsers(currentPage, 6).then((res) => {
+            setUsers(res.result);
+            setButtonDisabled(!res.previous);
+        });
     }, [currentPage, _refreshToken]);
 
     const openModal = () => {

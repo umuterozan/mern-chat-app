@@ -42,7 +42,7 @@ async function authenticateToken(req, res, next) {
             ok: false,
             err:
                 err.name === "TokenExpiredError"
-                    ? "jwt expired"
+                    ? "Token expired"
                     : "Not authorized",
         });
     }

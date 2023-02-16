@@ -1,9 +1,17 @@
-function request(endpoint, data = false, method = "GET") {
+import { handleRefresh } from "../helpers";
+
+export function request(
+    endpoint,
+    data = false,
+    method = "GET",
+    accessToken = localStorage.getItem("_accessToken"),
+    refreshToken = localStorage.getItem("_refreshToken")
+) {
     return new Promise(async (resolve, reject) => {
         const options = {
             method,
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("_accessToken"),
+                Authorization: "Bearer " + accessToken,
                 "Content-Type": "application/json",
             },
         };
@@ -16,9 +24,15 @@ function request(endpoint, data = false, method = "GET") {
             process.env.REACT_APP_API_URL + endpoint,
             options
         );
+
         const result = await response.json();
+
         if (response.ok) {
             resolve(result);
+        } else if (result.err === "Token expired") {
+            handleRefresh(endpoint, data, method, { refreshToken }).then(
+                (res) => resolve(res)
+            );
         } else {
             reject(result);
         }
