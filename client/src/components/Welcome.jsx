@@ -58,10 +58,7 @@ export default function Welcome({ setCurrentChat }) {
             <p className="mt-2 opacity-60">
                 Bir arkadaşına veya gruba gizli fotoğraflar ve mesajlar gönder.
             </p>
-            <button
-                onClick={openModal}
-                className="mt-5 px-5 py-2 bg-blue-600 text-white font-medium leading-tight rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-            >
+            <button onClick={openModal} className="modal-btn">
                 Mesaj Gönder
             </button>
 
